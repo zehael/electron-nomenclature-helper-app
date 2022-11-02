@@ -3,30 +3,47 @@ import { Avatar, Button, Form, List, message, Select, Upload } from 'antd';
 import { DeleteOutlined, InboxOutlined, TableOutlined } from '@ant-design/icons';
 import styles from './ConstructorPrice.module.scss';
 import type { RcFile, UploadFile } from 'antd/es/upload/interface';
+import readXlsxFile from 'read-excel-file';
+
+const fs = window.require('fs');
 
 const ConstructorPriceForm = () => {
 	const [fileList, setFileList] = useState<UploadFile[]>([]);
 	const [form] = Form.useForm();
 
-	const onFinish = (values: any) => {
+	const onFinish = async (values: any) => {
 		console.log('Success:', values);
+		const filePath = values.dragger[0].originFileObj.path;
+		console.log('path is', filePath);
+		readFile(filePath);
 	};
 
 	const onFinishFailed = (errorInfo: any) => {
 		console.log('Failed:', errorInfo);
 	};
 
+	const readFile = (filePath: string) => {
+		readXlsxFile(fs.createReadStream(filePath), { sheet: 1 }).then(rows => {
+			// `rows` is an array of rows
+			// each row being an array of cells.
+			console.log('rows is', rows);
+		});
+	};
+
 	const normFile = (e: any) => {
-		console.log('Upload event:', e);
 		if (Array.isArray(e)) {
 			return e;
 		}
 		const isExcelType = e.file.type === 'application/vnd.ms-excel';
+		const isFileNotBig = e?.file.size / 1024 / 1024 < 48;
 		if (e?.fileList.length && isExcelType) {
 			setFileList(e?.fileList);
-		} else {
-			clearFiles();
 		}
+
+		if (!isExcelType || !isFileNotBig) {
+			return [];
+		}
+
 		return e?.fileList;
 	};
 
@@ -42,7 +59,7 @@ const ConstructorPriceForm = () => {
 		return isExcelType && isLt2M;
 	};
 
-	const handleRequest = (options: any) => {
+	const handleRequest = () => {
 		return new Promise(resolve => {
 			resolve('ok');
 		});
