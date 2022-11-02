@@ -1,12 +1,21 @@
 import React from 'react';
-import {createRoot} from "react-dom/client";
+import { createRoot } from 'react-dom/client';
 import './styles/index.scss';
+import { Layout, Tabs } from 'antd';
+import ConstructorPriceView from './features/constructor-price/ConstructorPriceView';
+import { Context, stories } from './store';
 
 const App = () => {
+	const items = [
+		{ label: 'Конструктор цен', key: '1', children: <ConstructorPriceView /> }, // remember to pass the key prop
+		{ label: 'Настройки', key: 'item-2', children: 'Здесь будет дополнительный контент' },
+	];
 	return (
-		<div>
-			<h2>Hello world from react!</h2>
-		</div>
+		<Context.Provider value={{ ...stories }}>
+			<Layout>
+				<Tabs defaultActiveKey='1' items={items} />
+			</Layout>
+		</Context.Provider>
 	);
 };
 

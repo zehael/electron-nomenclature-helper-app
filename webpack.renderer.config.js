@@ -15,7 +15,7 @@ rules.push({
 		// Compiles Sass to CSS
 		"sass-loader",
 	],
-},);
+});
 
 module.exports = {
   module: {
