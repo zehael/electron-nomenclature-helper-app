@@ -1,8 +1,14 @@
 .form {
-
   &__actions {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    margin-top: 4rem;
+  }
+
+  &__tag {
+    height: 100%;
+    width: 100%;
+    padding: 0.5rem;
   }
 }

@@ -1,40 +1,35 @@
-import React, { useState } from 'react';
-import { Avatar, Button, Form, List, message, Select, Upload } from 'antd';
+import React, { FC, useState } from 'react';
+import { Avatar, Button, Form, List, message, Upload } from 'antd';
 import { DeleteOutlined, InboxOutlined, TableOutlined } from '@ant-design/icons';
 import styles from './ConstructorPrice.module.scss';
 import type { RcFile, UploadFile } from 'antd/es/upload/interface';
-import readXlsxFile from 'read-excel-file';
+import { useStore } from '../../store';
 
-const fs = window.require('fs');
+interface TableLoadFormProps {
+	readFile: () => void;
+}
 
-const ConstructorPriceForm = () => {
+const TableLoadForm: FC<TableLoadFormProps> = ({ readFile }) => {
 	const [fileList, setFileList] = useState<UploadFile[]>([]);
 	const [form] = Form.useForm();
+	const { excelStore } = useStore();
 
 	const onFinish = async (values: any) => {
 		console.log('Success:', values);
 		const filePath = values.dragger[0].originFileObj.path;
-		console.log('path is', filePath);
-		readFile(filePath);
+		excelStore.SET_FILE_PATH(filePath);
+		await readFile();
 	};
 
 	const onFinishFailed = (errorInfo: any) => {
 		console.log('Failed:', errorInfo);
 	};
 
-	const readFile = (filePath: string) => {
-		readXlsxFile(fs.createReadStream(filePath), { sheet: 1 }).then(rows => {
-			// `rows` is an array of rows
-			// each row being an array of cells.
-			console.log('rows is', rows);
-		});
-	};
-
 	const normFile = (e: any) => {
 		if (Array.isArray(e)) {
 			return e;
 		}
-		const isExcelType = e.file.type === 'application/vnd.ms-excel';
+		const isExcelType = e.file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 		const isFileNotBig = e?.file.size / 1024 / 1024 < 48;
 		if (e?.fileList.length && isExcelType) {
 			setFileList(e?.fileList);
@@ -48,7 +43,7 @@ const ConstructorPriceForm = () => {
 	};
 
 	const beforeUpload = (file: RcFile) => {
-		const isExcelType = file.type === 'application/vnd.ms-excel';
+		const isExcelType = file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 		if (!isExcelType) {
 			message.error('Можно загружать только файлы формата xls или xlsx!');
 		}
@@ -81,12 +76,6 @@ const ConstructorPriceForm = () => {
 				onFinishFailed={onFinishFailed}
 				autoComplete='off'
 			>
-				<Form.Item label='Режим работы' name='workMode' rules={[{ required: true, message: '' }]} initialValue='one'>
-					<Select>
-						<Select.Option value='one'>Конкретная строка</Select.Option>
-						<Select.Option value='may'>Все строки</Select.Option>
-					</Select>
-				</Form.Item>
 				<Form.Item
 					name='dragger'
 					label='Таблица с номенклатурой (товары ТУ)'
@@ -106,7 +95,7 @@ const ConstructorPriceForm = () => {
 					)}
 				</Form.Item>
 				{fileList.length > 0 && (
-					<Form.Item label='Таблица с номенклатурой (товары ТУ)'>
+					<Form.Item name='fileItems' label='Таблица с номенклатурой (товары ТУ)'>
 						<List
 							itemLayout='horizontal'
 							dataSource={fileList}
@@ -141,7 +130,7 @@ const ConstructorPriceForm = () => {
 				<div className={styles.form__actions}>
 					<Form.Item>
 						<Button type='primary' htmlType='submit'>
-							Запустить
+							Вперед
 						</Button>
 					</Form.Item>
 				</div>
@@ -150,4 +139,4 @@ const ConstructorPriceForm = () => {
 	);
 };
 
-export default ConstructorPriceForm;
+export default TableLoadForm;
