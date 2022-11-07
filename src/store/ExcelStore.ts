@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { Workbook, Worksheet } from 'exceljs';
+import { IWorkMetalCostSettings } from '../types/excell';
 
 export default class ExcelStore {
 	filePath = '';
@@ -7,6 +8,7 @@ export default class ExcelStore {
 	wb: Workbook | null = null;
 	ws: Worksheet | null = null;
 	worksheetList: Worksheet[] = [];
+	workMetalCostSettings: IWorkMetalCostSettings[] = [];
 
 	constructor() {
 		makeAutoObservable(this);
@@ -30,5 +32,9 @@ export default class ExcelStore {
 
 	SET_WORKSHEET_LIST(payload: Worksheet[]) {
 		this.worksheetList = payload;
+	}
+
+	SET_COST_SETTINGS(payload: IWorkMetalCostSettings[]) {
+		this.workMetalCostSettings = payload;
 	}
 }

@@ -1,8 +1,9 @@
 import React, { FC, useMemo, useState } from 'react';
-import { Button, Col, Form, InputNumber, Row, Select, Tag } from 'antd';
+import { Button, Card, Col, Divider, Form, InputNumber, Row, Select, Tag } from 'antd';
 import { useStore } from '../../store';
 import styles from './ConstructorPrice.module.scss';
 import { observer } from 'mobx-react-lite';
+import useExcelFile from '../../hooks/useExcelFile';
 
 interface ExcelWorkFromProps {
 	rowCount: number;
@@ -10,6 +11,7 @@ interface ExcelWorkFromProps {
 
 const ExcelWorkForm: FC<ExcelWorkFromProps> = ({ rowCount }) => {
 	const { excelStore } = useStore();
+	const { defineWorkCostAndMetalCost } = useExcelFile();
 	const [workMode, setWorkMode] = useState<string>('one');
 	const [rowNumber, setRowNumber] = useState<number>(1);
 	const [cellNumber, setCellNumber] = useState<number>(1);
@@ -30,11 +32,20 @@ const ExcelWorkForm: FC<ExcelWorkFromProps> = ({ rowCount }) => {
 		if (excelStore.ws) {
 			const row = excelStore.ws.getRow(rowNumber);
 			const cell = row.getCell(cellNumber);
-			return cell.value.toString();
+			const cellValue = cell.value ? cell.value.toString() : 'n/a';
+			return cellValue;
 		}
 
 		return 'n/a';
 	}, [rowNumber, cellNumber]);
+
+	const changeWorksheet = (worksheetId: string | number) => {
+		const worksheet = excelStore.worksheetList.find(item => item.id.toString() === worksheetId.toString());
+		if (worksheet) {
+			excelStore.SET_WORKSHEET(worksheet);
+			defineWorkCostAndMetalCost(worksheet);
+		}
+	};
 
 	return (
 		<Form layout='vertical' onFinish={onFinish} onFinishFailed={onFinishFailed} className={styles.form}>
@@ -51,7 +62,7 @@ const ExcelWorkForm: FC<ExcelWorkFromProps> = ({ rowCount }) => {
 					rules={[{ required: true, message: '' }]}
 					initialValue={excelStore.ws.id}
 				>
-					<Select onSelect={onSelect}>
+					<Select onSelect={changeWorksheet}>
 						{excelStore.worksheetList.map(item => (
 							<Select.Option key={item.id} value={item.id}>
 								{item.name}
@@ -81,14 +92,42 @@ const ExcelWorkForm: FC<ExcelWorkFromProps> = ({ rowCount }) => {
 					</Col>
 				</Row>
 			)}
-			<div>Row count: {rowCount}</div>
 			{workMode === 'many' && (
-				<div>
-					<Form.Item name='rowStartNumber' label='С какой строки начать' rules={[{ required: true }]}>
-						<InputNumber min={1} max={rowCount} />
-					</Form.Item>
-				</div>
+				<Row gutter={[20, 0]}>
+					<Col xs={{ span: 24 }} md={{ span: 8 }}>
+						<Form.Item name='rowStartNumber' label='С какой строки начать' rules={[{ required: true }]}>
+							<InputNumber min={1} max={rowCount} />
+						</Form.Item>
+					</Col>
+				</Row>
 			)}
+			<Divider />
+			<Row gutter={[20, 0]}>
+				<Col xs={{ span: 24 }} md={{ span: 8 }}>
+					<Card size='small' title='Количество строк'>
+						<h3>{rowCount}</h3>
+					</Card>
+				</Col>
+				{excelStore.workMetalCostSettings.map(item => (
+					<Col xs={{ span: 24 }} md={{ span: 8 }} key={item.name}>
+						<Card title={item.displayName}>
+							<Tag color='green'>
+								<strong>Стоимость работ</strong> <span>{item.workCost}</span>
+							</Tag>
+							<h4>Стоимость металла</h4>
+							<Tag color='orange'>
+								<strong>Материал У:</strong> <span>{item.metalCost.material.u}</span>
+							</Tag>
+							<Tag color='orange'>
+								<strong>Материал ХЛ:</strong> <span>{item.metalCost.material.hl}</span>
+							</Tag>
+							<Tag color='orange'>
+								<strong>Мериал НЖ:</strong> <span>{item.metalCost.material.nz}</span>
+							</Tag>
+						</Card>
+					</Col>
+				))}
+			</Row>
 			<div className={styles.form__actions}>
 				<Form.Item>
 					<Button type='primary' htmlType='submit'>
