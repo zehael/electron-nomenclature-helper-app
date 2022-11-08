@@ -11,7 +11,7 @@ interface ExcelWorkFromProps {
 
 const ExcelWorkForm: FC<ExcelWorkFromProps> = ({ rowCount }) => {
 	const { excelStore } = useStore();
-	const { defineWorkCostAndMetalCost } = useExcelFile();
+	const { defineWorkCostAndMetalCost, handleProductRow } = useExcelFile();
 	const [workMode, setWorkMode] = useState<string>('one');
 	const [rowNumber, setRowNumber] = useState<number>(1);
 	const [cellNumber, setCellNumber] = useState<number>(1);
@@ -22,6 +22,7 @@ const ExcelWorkForm: FC<ExcelWorkFromProps> = ({ rowCount }) => {
 
 	const onFinish = async (values: any) => {
 		console.log('Success:', values);
+		await handleProductRow(excelStore.ws, values.rowNumber);
 	};
 
 	const onFinishFailed = (errorInfo: any) => {
@@ -32,8 +33,9 @@ const ExcelWorkForm: FC<ExcelWorkFromProps> = ({ rowCount }) => {
 		if (excelStore.ws) {
 			const row = excelStore.ws.getRow(rowNumber);
 			const cell = row.getCell(cellNumber);
-			const cellValue = cell.value ? cell.value.toString() : 'n/a';
-			return cellValue;
+			console.log('cell is', cell.value);
+			console.log('cell formula is', cell.formula);
+			return String(cell.value) || 'n/a';
 		}
 
 		return 'n/a';
@@ -86,7 +88,7 @@ const ExcelWorkForm: FC<ExcelWorkFromProps> = ({ rowCount }) => {
 					<Col xs={{ span: 24 }} md={{ span: 8 }}>
 						<Form.Item label='Значение ячейки'>
 							<Tag className={styles.form__tag} color='green'>
-								{cellValue}
+								{JSON.stringify(cellValue)}
 							</Tag>
 						</Form.Item>
 					</Col>
@@ -114,7 +116,7 @@ const ExcelWorkForm: FC<ExcelWorkFromProps> = ({ rowCount }) => {
 							<Tag color='green'>
 								<strong>Стоимость работ</strong> <span>{item.workCost}</span>
 							</Tag>
-							<h4>Стоимость металла</h4>
+							<h4 className={styles.form__subheading}>Стоимость металла</h4>
 							<Tag color='orange'>
 								<strong>Материал У:</strong> <span>{item.metalCost.material.u}</span>
 							</Tag>

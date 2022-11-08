@@ -4,6 +4,8 @@ import { app, BrowserWindow } from 'electron';
 // whether you're running in development or production).
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -13,7 +15,7 @@ if (require('electron-squirrel-startup')) {
 const createWindow = (): void => {
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
-		height: 600,
+		height: 860,
 		width: 1000,
 		webPreferences: {
 			preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,

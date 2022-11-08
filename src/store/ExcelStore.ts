@@ -9,6 +9,7 @@ export default class ExcelStore {
 	ws: Worksheet | null = null;
 	worksheetList: Worksheet[] = [];
 	workMetalCostSettings: IWorkMetalCostSettings[] = [];
+	columnNumberForWeightParams = 21;
 
 	constructor() {
 		makeAutoObservable(this);
@@ -36,5 +37,9 @@ export default class ExcelStore {
 
 	SET_COST_SETTINGS(payload: IWorkMetalCostSettings[]) {
 		this.workMetalCostSettings = payload;
+	}
+
+	SET_COLUMN_WEIGHT_NUMBER(payload: number) {
+		this.columnNumberForWeightParams = payload;
 	}
 }
