@@ -139,7 +139,7 @@ const ExcelWorkForm: FC<ExcelWorkFromProps> = ({ rowCount }) => {
 			<div className={styles.form__actions}>
 				<Form.Item>
 					<Button type='primary' htmlType='submit'>
-						Запустить
+						Взять в работу строку
 					</Button>
 				</Form.Item>
 			</div>

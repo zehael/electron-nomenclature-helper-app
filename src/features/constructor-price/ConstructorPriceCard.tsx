@@ -3,6 +3,8 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from '../../store';
 import { Button, Card, Tag } from 'antd';
 import styles from './ConstructorPrice.module.scss';
+import { IConstructorPriceSetByOptions } from '../../types/constructor';
+import { IWorkMetalCostSettings } from '../../types/excell';
 
 const ConstructorPriceCard = () => {
 	const { constructorStore, excelStore } = useStore();
@@ -12,9 +14,8 @@ const ConstructorPriceCard = () => {
 	}
 
 	const handleConstructorPrice = () => {
-		console.log('cost settings is', excelStore.workMetalCostSettings,);
+		console.log('data for update', constructorStore.constructorPrice.attributes);
 		const updatedData = JSON.parse(JSON.stringify(constructorStore.constructorPrice.attributes));
-		console.log('data for update', updatedData);
 		excelStore.workMetalCostSettings.forEach(item => {
 			// eslint-disable-next-line no-debugger
 			debugger;
@@ -29,6 +30,8 @@ const ConstructorPriceCard = () => {
 					formulaWeightItems,
 					item.name
 				);
+				const pricesByOption = updatedData.priceList[priceListIdx].pricesByOption;
+				updatedData.priceList[priceListIdx].pricesByOption = handleMetalCostInPriceByOptions(pricesByOption, item);
 			} else {
 				throw Error('Не найден price set для обработки цены');
 			}
@@ -67,11 +70,25 @@ const ConstructorPriceCard = () => {
 		return result;
 	};
 
+	const handleMetalCostInPriceByOptions = (
+		pricesByOption: IConstructorPriceSetByOptions[],
+		costSettingsItem: IWorkMetalCostSettings
+	): IConstructorPriceSetByOptions[] => {
+		const metalCostWithMaterial = JSON.parse(JSON.stringify(costSettingsItem.metalCost.material));
+		const keysOfMetalCostMaterial = Object.keys(metalCostWithMaterial);
+		return [...pricesByOption].map((item, idx) => {
+			const key = keysOfMetalCostMaterial[idx];
+			const val = parseInt(metalCostWithMaterial[key]);
+			item.metalCost = val || 0;
+			return item;
+		});
+	};
+
 	return (
 		<Card
 			actions={[
 				<Button type='primary' onClick={handleConstructorPrice}>
-					Обновить карточку цены
+					Обновить данные в БД
 				</Button>,
 			]}
 			className={styles.price}

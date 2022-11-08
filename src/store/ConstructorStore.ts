@@ -1,10 +1,11 @@
 import { makeAutoObservable } from 'mobx';
 import ApiService from '../services/api';
+import { IConstructorPrice } from '../types/constructor';
 
 const apiService = new ApiService();
 
 export default class ConstructorStore {
-	constructorPrice: any | null = null;
+	constructorPrice: IConstructorPrice | null = null;
 
 	constructor() {
 		makeAutoObservable(this);

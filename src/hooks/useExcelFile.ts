@@ -175,8 +175,6 @@ export default function useExcelFile() {
 			workCost: Number(getValueFromCellByCoordinates(ws, workCost.row, workCost.cell)),
 		};
 
-		console.log('created costSettings', costSettings);
-
 		return costSettings;
 	};
 
