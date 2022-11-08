@@ -32,3 +32,8 @@ export interface IWorkMetalCostSettings {
 	};
 	workCost: number;
 }
+
+export interface IColumnOfWeightFormula {
+	rodLength: number;
+	udlinitel: number;
+}

@@ -1,6 +1,7 @@
 import { Workbook, Worksheet } from 'exceljs';
 import { useStore } from '../store';
 import { IWorkMetalCostPosition, IWorkMetalCostSettings } from '../types/excell';
+
 const fs = window.require('fs');
 
 const costDataCellsPositions: IWorkMetalCostPosition[] = [
@@ -121,11 +122,11 @@ export default function useExcelFile() {
 		switch (worksheet.name) {
 			case 'КРП':
 				costSettingsPosition = costDataCellsPositions.find(item => item.name === 'krp');
-				excelStore.SET_COLUMN_WEIGHT_NUMBER(21);
+				excelStore.SET_COLUMN_OF_WEIGHT_FORMULA({ rodLength: 21, udlinitel: 29 });
 				break;
 			case 'КЭП':
 				costSettingsPosition = costDataCellsPositions.find(item => item.name === 'kep');
-				excelStore.SET_COLUMN_WEIGHT_NUMBER(22);
+				excelStore.SET_COLUMN_OF_WEIGHT_FORMULA({ rodLength: 22, udlinitel: 30 });
 				break;
 			default:
 				break;
@@ -188,8 +189,6 @@ export default function useExcelFile() {
 		const row = worksheet.getRow(rowNumber);
 		const productName = String(row.getCell(2).value).trim();
 		const latchDiameter = parseInt(String(row.getCell(1).value).replace(/\S+/, ''));
-		console.log('latch diameter', latchDiameter);
-		console.log('productName', productName);
 		await constructorStore.fetchProductPrice(latchDiameter, productName);
 	};
 

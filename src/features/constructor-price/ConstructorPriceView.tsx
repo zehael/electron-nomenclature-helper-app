@@ -5,6 +5,7 @@ import useExcelFile from '../../hooks/useExcelFile';
 import { useStore } from '../../store';
 import { observer } from 'mobx-react-lite';
 import Loader from '../../components/app/Loader';
+import ConstructorPriceCard from './ConstructorPriceCard';
 
 const ConstructorPriceView = () => {
 	const { excelStore } = useStore();
@@ -22,8 +23,8 @@ const ConstructorPriceView = () => {
 			if (excelStore.filePath) {
 				await readFile(excelStore.filePath);
 			}
-		} catch (e) {
-			console.log('e');
+		} catch (err) {
+			console.log(err);
 		} finally {
 			excelStore.SET_LOADING(false);
 		}
@@ -34,6 +35,7 @@ const ConstructorPriceView = () => {
 			{excelStore.isLoading && <Loader />}
 			{excelStore.filePath === '' && !excelStore.isLoading && <TableLoadForm readFile={onReadFile} />}
 			{excelStore.filePath !== '' && !excelStore.isLoading && <ExcelWorkForm rowCount={excelStore.ws.rowCount || 10} />}
+			<ConstructorPriceCard />
 		</div>
 	);
 };

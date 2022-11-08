@@ -13,11 +13,18 @@ const ExcelWorkForm: FC<ExcelWorkFromProps> = ({ rowCount }) => {
 	const { excelStore } = useStore();
 	const { defineWorkCostAndMetalCost, handleProductRow } = useExcelFile();
 	const [workMode, setWorkMode] = useState<string>('one');
-	const [rowNumber, setRowNumber] = useState<number>(1);
 	const [cellNumber, setCellNumber] = useState<number>(1);
 
 	const onSelect = (val: string) => {
 		setWorkMode(val);
+	};
+
+	const setRow = (val: number) => {
+		excelStore.SET_CURRENT_ROW_NUM(val);
+	};
+
+	const setCell = (val: number) => {
+		setCellNumber(val);
 	};
 
 	const onFinish = async (values: any) => {
@@ -31,15 +38,14 @@ const ExcelWorkForm: FC<ExcelWorkFromProps> = ({ rowCount }) => {
 
 	const cellValue = useMemo<string>(() => {
 		if (excelStore.ws) {
-			const row = excelStore.ws.getRow(rowNumber);
+			const row = excelStore.ws.getRow(excelStore.currentRowNum);
 			const cell = row.getCell(cellNumber);
 			console.log('cell is', cell.value);
-			console.log('cell formula is', cell.formula);
-			return String(cell.value) || 'n/a';
+			return String(cell.value) || cell.formula || 'n/a';
 		}
 
 		return 'n/a';
-	}, [rowNumber, cellNumber]);
+	}, [excelStore.currentRowNum, cellNumber]);
 
 	const changeWorksheet = (worksheetId: string | number) => {
 		const worksheet = excelStore.worksheetList.find(item => item.id.toString() === worksheetId.toString());
@@ -77,12 +83,12 @@ const ExcelWorkForm: FC<ExcelWorkFromProps> = ({ rowCount }) => {
 				<Row gutter={[20, 0]}>
 					<Col xs={{ span: 24 }} md={{ span: 8 }}>
 						<Form.Item name='rowNumber' label='№ Строки' initialValue={1} rules={[{ required: true }]}>
-							<InputNumber value={rowNumber} onChange={val => setRowNumber(val)} min={1} max={rowCount} />
+							<InputNumber value={excelStore.currentRowNum} onChange={setRow} min={1} max={rowCount} />
 						</Form.Item>
 					</Col>
 					<Col xs={{ span: 24 }} md={{ span: 8 }}>
 						<Form.Item name='cellNumber' label='№ ячейки' initialValue={1} rules={[{ required: true }]}>
-							<InputNumber value={cellNumber} onChange={val => setCellNumber(val)} min={1} max={200} />
+							<InputNumber value={cellNumber} onChange={setCell} min={1} max={200} />
 						</Form.Item>
 					</Col>
 					<Col xs={{ span: 24 }} md={{ span: 8 }}>

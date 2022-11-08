@@ -6,7 +6,6 @@ export default class ApiService {
 	apiUrl: string = process.env.ELECTRON_WEBPACK_APP_API_URL;
 
 	async fetchConstructorPriceSettings(latchDiameter: number, productName: string) {
-		console.log('fetch constructor env vars', this.apiUrl);
 		const filtersParams = {
 			masterOptionValue: {
 				$eq: latchDiameter,

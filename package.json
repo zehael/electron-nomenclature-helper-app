@@ -47,7 +47,8 @@
           "name": "@electron-forge/plugin-webpack",
           "config": {
             "mainConfig": "./webpack.main.config.js",
-	          "devContentSecurityPolicy": "connect-src 'self' http://localhost:1337 'unsafe-eval'",
+	          "devServer": { "liveReload": false },
+            "devContentSecurityPolicy": "connect-src 'self' http://localhost:1337 'unsafe-eval'",
             "renderer": {
               "config": "./webpack.renderer.config.js",
               "entryPoints": [
@@ -73,6 +74,7 @@
     "@electron-forge/maker-squirrel": "^6.0.0-beta.68",
     "@electron-forge/maker-zip": "^6.0.0-beta.68",
     "@electron-forge/plugin-webpack": "6.0.0-beta.68",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.8",
     "@types/node": "^18.11.9",
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
@@ -81,6 +83,7 @@
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "css-loader": "^6.7.1",
     "electron": "21.2.0",
+    "electron-reload": "^2.0.0-alpha.1",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
@@ -89,6 +92,7 @@
     "node-loader": "^2.0.0",
     "path-browserify": "^1.0.1",
     "prettier": "^2.7.1",
+    "react-refresh": "^0.14.0",
     "resolve-url-loader": "^5.0.0",
     "sass": "^1.55.0",
     "sass-loader": "^13.1.0",

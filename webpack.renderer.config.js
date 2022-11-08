@@ -21,6 +21,9 @@ module.exports = {
 	module: {
 		rules,
 	},
+	node: {
+		__dirname: false,
+	},
 	plugins: plugins,
 	resolve: {
 		extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],

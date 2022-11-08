@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { Workbook, Worksheet } from 'exceljs';
-import { IWorkMetalCostSettings } from '../types/excell';
+import { IColumnOfWeightFormula, IWorkMetalCostSettings } from '../types/excell';
 
 export default class ExcelStore {
 	filePath = '';
@@ -8,8 +8,13 @@ export default class ExcelStore {
 	wb: Workbook | null = null;
 	ws: Worksheet | null = null;
 	worksheetList: Worksheet[] = [];
+	currentRowNum = 1;
 	workMetalCostSettings: IWorkMetalCostSettings[] = [];
-	columnNumberForWeightParams = 21;
+	columnOfWeightFormulaCell: IColumnOfWeightFormula = {
+		rodLength: 21,
+		udlinitel: 29,
+	};
+	workTime = 2;
 
 	constructor() {
 		makeAutoObservable(this);
@@ -39,7 +44,11 @@ export default class ExcelStore {
 		this.workMetalCostSettings = payload;
 	}
 
-	SET_COLUMN_WEIGHT_NUMBER(payload: number) {
-		this.columnNumberForWeightParams = payload;
+	SET_COLUMN_OF_WEIGHT_FORMULA(payload: IColumnOfWeightFormula) {
+		this.columnOfWeightFormulaCell = payload;
+	}
+
+	SET_CURRENT_ROW_NUM(payload: number) {
+		this.currentRowNum = payload;
 	}
 }
