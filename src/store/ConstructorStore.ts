@@ -21,4 +21,9 @@ export default class ConstructorStore {
 			this.SET_CONSTRUCTOR_PRICE(resp.data[0]);
 		}
 	}
+
+	async updateConstructorPrice(id: number, updateDto: any) {
+		const resp = await apiService.updateConstructorPrice(id, updateDto);
+		console.log('response of update', resp);
+	}
 }

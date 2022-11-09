@@ -53,7 +53,7 @@ export interface IConstructorDynamicPriceOptions {
 	weightParam1: number;
 	weightParam2: number;
 	weightParam3: number | null;
-	formulaCode: ConstructorDynamicPriceFormulaCodes;
+	formulaCode: ConstructorDynamicPriceFormulaCodes | string;
 }
 
 export enum ConstructorDynamicPriceFormulaCodes {

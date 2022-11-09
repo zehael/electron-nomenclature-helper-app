@@ -118,7 +118,7 @@ const ExcelWorkForm: FC<ExcelWorkFromProps> = ({ rowCount }) => {
 				</Col>
 				{excelStore.workMetalCostSettings.map(item => (
 					<Col xs={{ span: 24 }} md={{ span: 8 }} key={item.name}>
-						<Card title={item.displayName}>
+						<Card size='small' title={item.displayName}>
 							<Tag color='green'>
 								<strong>Стоимость работ</strong> <span>{item.workCost}</span>
 							</Tag>
