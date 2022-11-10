@@ -60,3 +60,10 @@ export enum ConstructorDynamicPriceFormulaCodes {
 	ROD_LENGTH = 'rodLength',
 	UDLINITEL = 'udlinitel',
 }
+
+export interface IConstructorPriceRow {
+	constructorPrice: IConstructorPrice;
+	updated: boolean;
+	externalProductLink: string;
+	rowNumber: number;
+}

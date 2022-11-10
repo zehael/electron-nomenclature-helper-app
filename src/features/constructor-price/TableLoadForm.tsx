@@ -15,7 +15,6 @@ const TableLoadForm: FC<TableLoadFormProps> = ({ readFile }) => {
 	const { excelStore } = useStore();
 
 	const onFinish = async (values: any) => {
-		console.log('Success:', values);
 		const filePath = values.dragger[0].originFileObj.path;
 		excelStore.SET_FILE_PATH(filePath);
 		await readFile();

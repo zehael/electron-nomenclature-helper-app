@@ -6,7 +6,6 @@ export default function useConstructorPrice() {
 	const { constructorStore, excelStore } = useStore();
 
 	const handleConstructorPrice = async () => {
-		console.log('data for update', constructorStore.constructorPrice.attributes);
 		const updatedData = JSON.parse(JSON.stringify(constructorStore.constructorPrice.attributes));
 		excelStore.workMetalCostSettings.forEach(item => {
 			const priceListIdx = updatedData.priceList.findIndex(
@@ -27,7 +26,6 @@ export default function useConstructorPrice() {
 			}
 		});
 		const updateDto = prepareUpdateDto(updatedData);
-		console.log('dto of update', updateDto);
 		await constructorStore.updateConstructorPrice(constructorStore.constructorPrice.id, updateDto);
 		return updateDto;
 	};

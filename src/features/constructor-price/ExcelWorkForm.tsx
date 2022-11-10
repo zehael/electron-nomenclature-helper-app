@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import { Button, Card, Col, Divider, Form, InputNumber, Row, Select, Tag } from 'antd';
 import { useStore } from '../../store';
 import styles from './ConstructorPrice.module.scss';
@@ -14,6 +14,11 @@ const ExcelWorkForm: FC<ExcelWorkFromProps> = ({ rowCount }) => {
 	const { defineWorkCostAndMetalCost, handleProductRow } = useExcelFile();
 	const [workMode, setWorkMode] = useState<string>('one');
 	const [cellNumber, setCellNumber] = useState<number>(1);
+	const [form] = Form.useForm();
+
+	useEffect(() => {
+		form.setFieldValue('rowNumber', excelStore.currentRowNum);
+	}, [excelStore.currentRowNum]);
 
 	const onSelect = (val: string) => {
 		setWorkMode(val);
@@ -28,7 +33,6 @@ const ExcelWorkForm: FC<ExcelWorkFromProps> = ({ rowCount }) => {
 	};
 
 	const onFinish = async (values: any) => {
-		console.log('Success:', values);
 		await handleProductRow(excelStore.ws, values.rowNumber);
 	};
 
@@ -56,7 +60,7 @@ const ExcelWorkForm: FC<ExcelWorkFromProps> = ({ rowCount }) => {
 	};
 
 	return (
-		<Form layout='vertical' onFinish={onFinish} onFinishFailed={onFinishFailed} className={styles.form}>
+		<Form form={form} layout='vertical' onFinish={onFinish} onFinishFailed={onFinishFailed} className={styles.form}>
 			<Form.Item label='Режим работы' name='workMode' rules={[{ required: true, message: '' }]} initialValue={workMode}>
 				<Select onSelect={onSelect}>
 					<Select.Option value='one'>Конкретная строка</Select.Option>

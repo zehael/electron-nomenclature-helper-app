@@ -20,3 +20,14 @@
 .price {
   margin-top: 2rem;
 }
+
+.list {
+  margin-top: 1rem;
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1rem 0;
+  }
+}

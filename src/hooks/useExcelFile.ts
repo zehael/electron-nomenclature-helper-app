@@ -1,6 +1,7 @@
 import { Workbook, Worksheet } from 'exceljs';
 import { useStore } from '../store';
 import { IWorkMetalCostPosition, IWorkMetalCostSettings } from '../types/excell';
+import { message } from 'antd';
 
 const fs = window.require('fs');
 
@@ -187,7 +188,11 @@ export default function useExcelFile() {
 		const row = worksheet.getRow(rowNumber);
 		const productName = String(row.getCell(2).value).trim();
 		const latchDiameter = parseInt(String(row.getCell(1).value).replace(/\S+/, ''));
-		await constructorStore.fetchProductPrice(latchDiameter, productName);
+		if (!productName || (!latchDiameter && latchDiameter !== 0)) {
+			message.error('Отсутсвует ТУ товар в строке табицы');
+			return;
+		}
+		await constructorStore.fetchProductPrice(latchDiameter, productName, rowNumber);
 	};
 
 	return {
