@@ -1,6 +1,5 @@
 # Electron app: Nomenclature helper
-
-![constructor-handler](https://user-images.githubusercontent.com/6964795/201090978-9756fb45-aa55-4269-9414-15a06d054546.gif)
+![constructor-handler-my](https://user-images.githubusercontent.com/6964795/201099035-56ce4834-ab13-445a-a2e7-2ff346a0132b.gif)
 
 
 ## Electron (forge) + TypeScript + React
